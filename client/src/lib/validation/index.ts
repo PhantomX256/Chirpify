@@ -10,7 +10,7 @@ const validateUsername = (username: string): boolean => {
 
 // Function to check if the name is not just whitespace
 const validateName = (name: string): boolean => {
-  return name.trim().length > 0; 
+  return name.trim().length > 0;
 };
 
 // Function to check if the passwords match

@@ -7,11 +7,8 @@ export const registerUser = async (req, res) => {
   const { name, username, email, password } = req.body;
 
   try {
-    /*
     // Check if the user exists
-    const userExists = await pool.query(
-      `SELECT * FROM users WHERE email = ${email}`
-    );
+    const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (userExists.rows.length > 0) {
       return res.status(400).json({ error: "User already exists" });
     }
@@ -21,12 +18,13 @@ export const registerUser = async (req, res) => {
 
     // Insert the user credentials into the database
     const newUser = await pool.query(
-      `INSERT INTO users (name, username, email, password) VALUES (${name}, ${username}, ${email}, ${hashedPassword})`
+      'INSERT INTO users (name, username, email, password) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, username, email, hashedPassword]
     );
-    */
-    res.status(201).json({ name: name, username: username, email: email, password: password});
+    
+    res.status(201).json({ user: newUser.rows[0] });
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
     res.status(500).json({ error: "Server error" });
   }
 };

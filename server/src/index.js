@@ -1,7 +1,3 @@
-// Setting up the secret variables
-import dotenv from 'dotenv';
-dotenv.config();
-
 // Importing necessary modules
 import app from './app.js';
 
