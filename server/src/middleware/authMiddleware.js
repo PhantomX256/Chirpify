@@ -1,4 +1,4 @@
-import { verifyToken } from "../utils/jwtUtils";
+import { verifyToken } from "../utils/jwtUtils.js";
 
 const authMiddleware = (req, res, next) => {
   // Getting the auth header

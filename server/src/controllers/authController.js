@@ -37,8 +37,7 @@ export const registerUser = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: undefined,
-      expires: new Date(253402300000000),
+      maxAge: 86400000,
     });
 
     // return user credentials
@@ -87,8 +86,7 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: undefined,
-      expires: new Date(253402300000000),
+      maxAge: 86400000,
     });
 
     // return user details
@@ -97,4 +95,11 @@ export const loginUser = async (req, res) => {
     console.log(err);
     res.status(500).json({ error: "Server error" });
   }
+};
+
+// All logic for logging out a user
+export const logoutUser = (req, res) => {
+  // Clear browser cookie
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfully" });
 };
