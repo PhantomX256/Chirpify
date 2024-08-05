@@ -1,7 +1,11 @@
+// Importing libraries
 import { CSSProperties, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+
+// Importing necessary lib functions
 import { validateSignUpCredentials } from "../../lib/validation";
 
+// Importing Components
 import { TailSpin } from 'react-loader-spinner'
 import { Input, Button } from "../../components";
 
