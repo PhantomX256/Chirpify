@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import pool from "../config/db.js";
 
 // Importing jwt functions
-import { generateToken } from "../utils/jwtUtils.js";
+import { generateToken, verifyToken } from "../utils/jwtUtils.js";
 
 // All logic for registering the user
 export const registerUser = async (req, res) => {
@@ -37,7 +37,7 @@ export const registerUser = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: 86400000,
+      maxAge: 86400000, // 24hrs
     });
 
     // return user credentials
@@ -86,7 +86,7 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: 86400000,
+      maxAge: 86400000, // 24hrs
     });
 
     // return user details
@@ -102,4 +102,37 @@ export const logoutUser = (req, res) => {
   // Clear browser cookie
   res.clearCookie("token");
   res.status(200).json({ message: "Logged out successfully" });
+};
+
+// Function to get user used for checking the user
+export const getUser = async (req, res) => {
+  // get the token from cookie
+  const token = req.cookies.token;
+
+  // Token isn't there
+  if (!token) return res.status(401).json({ error: "No token passed" });
+
+  try {
+    // Decode the web token
+    const decoded = verifyToken(token);
+
+    // token is invalid
+    if (!decoded) return res.status(401).json({ error: "Invalid token" });
+
+    // Get the user details from the database
+    const userDetails = await pool.query(
+      "SELECT (id, name, username, email) FROM users WHERE id = $1",
+      [decoded.id]
+    );
+
+    // user does not exist
+    if (userDetails.rows.length === 0)
+      return res.status(404).json({ error: "User not found" });
+
+    // Return the user details`
+    res.status(200).json({ user: userDetails.rows[0] });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Server error" });
+  }
 };

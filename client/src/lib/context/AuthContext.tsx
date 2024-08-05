@@ -1,12 +1,7 @@
+// Importing all the neceassary libraries
 import { useQueryClient, useMutation } from "react-query";
 import axios from "axios";
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  FC,
-} from "react";
+import { createContext, useContext, useState, ReactNode, FC } from "react";
 
 // Interface for users
 interface User {
@@ -35,18 +30,23 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // API functions
 const api = {
+  // Login Function
   login: (email: string, password: string) =>
     axios.post<{ user: User }>(
       "http://localhost:5000/api/auth/login",
       { email, password },
       { withCredentials: true }
     ),
+
+  // Register function
   register: (name: string, username: string, email: string, password: string) =>
     axios.post<{ user: User }>(
       "http://localhost:5000/api/auth/register",
       { name, username, email, password },
       { withCredentials: true }
     ),
+
+  // Logout function
   logout: () =>
     axios.post(
       "http://localhost:5000/api/auth/logout",
@@ -57,10 +57,14 @@ const api = {
 
 // Auth provider
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  // Declaring the query client
   const queryClient = useQueryClient();
+
+  // Hooks for user and loading
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Function for register mutation
   const registerMutation = useMutation({
     mutationFn: (userData: {
       name: string;
@@ -80,6 +84,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     },
   });
 
+  // Function for login mutation
   const loginMutation = useMutation({
     mutationFn: (credentials: { email: string; password: string }) =>
       api.login(credentials.email, credentials.password),
@@ -89,6 +94,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     },
   });
 
+  // Function for logout mutation
   const logoutMutation = useMutation({
     mutationFn: api.logout,
     onSuccess: () => {
@@ -97,6 +103,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     },
   });
 
+  // Actual logic for registering
   const register = async (
     name: string,
     username: string,
@@ -111,6 +118,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  // Actual logic for login
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
@@ -120,6 +128,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  // Actual logic for logout
   const logout = async () => {
     setIsLoading(true);
     try {
@@ -129,6 +138,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  // Return the context
   return (
     <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
       {children}

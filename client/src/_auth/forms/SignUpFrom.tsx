@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 // Importing necessary lib functions
 import { validateSignUpCredentials } from "../../lib/validation/formValidation";
+import { useAuth } from "../../lib/context/AuthContext";
 
 // Importing Components
 import { TailSpin } from 'react-loader-spinner'
@@ -20,6 +21,8 @@ const SignUpFrom: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { register } = useAuth();
+
   // declaring all the styles for this form
   const errorStyles: CSSProperties = {
     color: '#8a6029',
@@ -30,15 +33,15 @@ const SignUpFrom: React.FC = () => {
   }
 
   // Function to handle submit
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     setLoading(true);
     // prevent default submission
     e.preventDefault();
 
     // check all the credentials
     if(validateSignUpCredentials(name, username, password, confirmPassword, setError)) {
-      console.log(`Name: ${name}\nUsername: ${username}\nEmail: ${email}\nPassword: ${password}\nConfirm Password: ${confirmPassword}`);
       setError('');
+      
     }
     setLoading(false);
   }
