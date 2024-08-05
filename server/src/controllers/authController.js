@@ -2,7 +2,10 @@
 import bcrypt from "bcrypt";
 import pool from "../config/db.js";
 
-// Al logic for registering the user
+// Importing jwt functions
+import { generateToken } from "../utils/jwtUtils.js";
+
+// All logic for registering the user
 export const registerUser = async (req, res) => {
   // Fetching all the credentials from the request body
   const { name, username, email, password } = req.body;
@@ -26,7 +29,23 @@ export const registerUser = async (req, res) => {
       [name, username, email, hashedPassword]
     );
 
-    res.status(201).json({ user: newUser.rows[0] });
+    // Generate the token
+    const token = generateToken(newUser.rows[0].id);
+
+    // Create a cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: undefined,
+      expires: new Date(253402300000000),
+    });
+
+    // return user credentials
+    res.status(201).json({
+      user: newUser.rows[0],
+      token: token,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Server error" });
@@ -60,8 +79,20 @@ export const loginUser = async (req, res) => {
     // Get other user details other than password
     const { password: userPassword, ...userDetails } = user;
 
-    // Return user details
-    res.status(200).json(userDetails);
+    // Generate a webtoken
+    const token = generateToken(user.id);
+
+    // Create a cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: undefined,
+      expires: new Date(253402300000000),
+    });
+
+    // return user details
+    res.status(200).json({ user: userDetails, token: token });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Server error" });
