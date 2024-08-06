@@ -3,7 +3,6 @@ import { CSSProperties, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 // Importing necessary lib functions
-import { validateSignUpCredentials } from "../../lib/validation/formValidation";
 import { useAuth } from "../../lib/context/AuthContext";
 
 // Importing Components
@@ -18,10 +17,9 @@ const SignUpFrom: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { register } = useAuth();
+  const { register, serverError } = useAuth();
 
   // declaring all the styles for this form
   const errorStyles: CSSProperties = {
@@ -38,11 +36,13 @@ const SignUpFrom: React.FC = () => {
     // prevent default submission
     e.preventDefault();
 
-    // check all the credentials
-    if(validateSignUpCredentials(name, username, password, confirmPassword, setError)) {
-      setError('');
-      
-    }
+      // try to register
+      try {
+        await register(name, username, email, password, confirmPassword);
+      } catch (err) {
+        if (!serverError) console.log('Fatal Error');
+      }
+
     setLoading(false);
   }
 
@@ -59,7 +59,7 @@ const SignUpFrom: React.FC = () => {
       <Input label="Confirm Password" type="password" value={confirmPassword} name="confirmPassword" setState={setConfirmPassword} placeholder="" />
 
       {/* If there is any error in the inputs it will be displayed here */}
-      {error && (<span style={errorStyles}>{error}</span>)}
+      {serverError && (<span style={errorStyles}>{serverError}</span>)}
 
       {/* Submit button */}
       <Button type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>

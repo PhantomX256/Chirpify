@@ -4,11 +4,15 @@ import pool from "../config/db.js";
 
 // Importing jwt functions
 import { generateToken, verifyToken } from "../utils/jwtUtils.js";
+import { validateSignUpCredentials } from "../utils/formValidation.js";
 
 // All logic for registering the user
 export const registerUser = async (req, res) => {
   // Fetching all the credentials from the request body
-  const { name, username, email, password } = req.body;
+  const { name, username, email, password, confirmPassword } = req.body;
+
+  // validates all the credentials
+  if (!validateSignUpCredentials(name, username, password, confirmPassword, res)) return;
 
   try {
     // Check if the user exists
@@ -131,7 +135,7 @@ export const getUser = async (req, res) => {
 
     // Return the user details`
     res.status(200).json({ user: userDetails.rows[0] });
-  } catch (err) {
+  } catch (err) { 
     console.log(err);
     res.status(500).json({ error: "Server error" });
   }

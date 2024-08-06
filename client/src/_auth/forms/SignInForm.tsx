@@ -15,14 +15,13 @@ const SignInForm = () => {
 
   // function to handle submit
   const handleSubmit = (e: FormEvent) => {
+    // set loading to true
     setLoading(true);
+
     // prevent default credentials
     e.preventDefault();
 
-    setTimeout(() => {
-      setLoading(false);
-      alert('Success');
-    }, 2000);
+    
   }
   
   return (
