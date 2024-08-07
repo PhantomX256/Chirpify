@@ -1,5 +1,5 @@
 // Importing libraries
-import { CSSProperties, FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 // Importing necessary lib functions
@@ -19,16 +19,8 @@ const SignUpFrom: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Getting functions from context
   const { register, serverError } = useAuth();
-
-  // declaring all the styles for this form
-  const errorStyles: CSSProperties = {
-    color: '#8a6029',
-    fontSize: '18px',
-    fontWeight: '600',
-    fontFamily: 'Montserrat',
-    textAlign: 'center'
-  }
 
   // Function to handle submit
   const handleSubmit = async (e: FormEvent) => {
@@ -59,7 +51,7 @@ const SignUpFrom: React.FC = () => {
       <Input label="Confirm Password" type="password" value={confirmPassword} name="confirmPassword" setState={setConfirmPassword} placeholder="" />
 
       {/* If there is any error in the inputs it will be displayed here */}
-      {serverError && (<span style={errorStyles}>{serverError}</span>)}
+      {serverError && (<span className="error">{serverError}</span>)}
 
       {/* Submit button */}
       <Button type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>

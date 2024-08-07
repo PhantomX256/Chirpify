@@ -1,5 +1,5 @@
 // Importing all the necessary libraries
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
   createContext,
@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 //  ###########
-//  NOTE: Somehow this piece of code works. DO NOT MESS WITH IT!!!!!!!
+//  NOTE: Somehow this piece of code works. DO NOT MESS WITH IT!!!!!!! EVER....
 //  ###########
 
 // Interface for users
@@ -34,7 +34,7 @@ interface AuthContextType {
     username: string,
     email: string,
     password: string,
-    confirmPassword: string,
+    confirmPassword: string
   ) => Promise<void>;
   logout: () => Promise<void>;
   serverError: string | null;
@@ -65,7 +65,13 @@ const api = {
     ),
 
   // Register function
-  register: (name: string, username: string, email: string, password: string, confirmPassword: string) =>
+  register: (
+    name: string,
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  ) =>
     axios.post<ApiResponse>(
       "http://localhost:5000/api/auth/register",
       { name, username, email, password, confirmPassword },
@@ -111,29 +117,30 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
-  // Side effect for user checking
+  // We will get user data in case the user is already signed in
+  const {
+    data,
+    isError,
+    isLoading: userQueryLoading,
+    error,
+  } = useQuery({ queryKey: ["user"], queryFn: api.getCurrentUser });
+
+  // useEffect for error handling and setting hooks
   useEffect(() => {
-    const checkUser = async () => {
-      // Set Loading true
-      setIsLoading(true);
+    if (isError) {
+      setServerError(error.message);
+    } else if (data) {
+      setUser(data.data.user);
+    } else {
+      setUser(null);
+    }
+  }, [data, isError, error]);
 
-      try {
-        // Get the user data from database
-        const { data } = await api.getCurrentUser();
-
-        // Set current user to data.user
-        setUser(data.user);
-      } catch {
-        // If no user exists then
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Uses cookies to check the token and get the corresponding user
-    checkUser();
-  }, []);
+  // Side effect for hanlding loading while user checking
+  useEffect(() => {
+    if (userQueryLoading) setIsLoading(true);
+    else setIsLoading(false);
+  }, [userQueryLoading]);
 
   // Function for register mutation
   const registerMutation = useMutation({
@@ -166,9 +173,12 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       // Navigate to home
       navigate("/");
     },
+    // if any errors occur
     onError: (error: any) => {
-      setServerError(error.response?.data?.error || "An unexpected error occurred");
-    }
+      setServerError(
+        error.response?.data?.error || "An unexpected error occurred"
+      );
+    },
   });
 
   // Function for login mutation
@@ -176,6 +186,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     mutationFn: (credentials: { email: string; password: string }) =>
       api.login(credentials.email, credentials.password),
     onSuccess: (data) => {
+      setServerError(null);
       // Set the cookies to contain the token
       Cookies.set("token", data.data.token, { expires: 1 });
 
@@ -188,15 +199,20 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       // Navigate to home
       navigate("/");
     },
+    // If any errors occur
     onError: (error: any) => {
-      setServerError(error.response?.data?.error || "An unexpected error occurred");
-    }
+      setServerError(
+        error.response?.data?.error || "An unexpected error occurred"
+      );
+    },
   });
 
   // Function for logout mutation
   const logoutMutation = useMutation({
     mutationFn: api.logout,
     onSuccess: () => {
+      setServerError(null);
+
       // Remove token from cookies
       Cookies.remove("token");
 
@@ -209,9 +225,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       // Navigate to sign in route
       navigate("/sign-in");
     },
+    // If any errors occur
     onError: () => {
       setServerError("Failed to logout. Try again later.");
-    }
+    },
   });
 
   // Actual logic for registering
@@ -220,11 +237,17 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     username: string,
     email: string,
     password: string,
-    confirmPassword: string,
+    confirmPassword: string
   ) => {
     setIsLoading(true);
     try {
-      await registerMutation.mutateAsync({ name, username, email, password, confirmPassword });
+      await registerMutation.mutateAsync({
+        name,
+        username,
+        email,
+        password,
+        confirmPassword,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -252,7 +275,9 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   // Return the context
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, serverError }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, login, register, logout, serverError }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -10,6 +10,9 @@ import { Home } from "./_root/pages";
 import RootLayout from "./_root/RootLayout";
 import AuthLayout from "./_auth/AuthLayout";
 
+// Importing public and private routes
+import { PublicRoute, PrivateRoute } from "./routes";
+
 const App = () => {
   return (
     <main
@@ -17,15 +20,19 @@ const App = () => {
     >
       <Routes>
         {/* Public Routes */}
-        <Route element={<AuthLayout />}>
-          <Route path="/sign-in" element={<SignInForm />} />
-          <Route path="/sign-up" element={<SignUpForm />} />
-        </Route>
+        <PublicRoute>
+          <Route element={<AuthLayout />}>
+            <Route path="/sign-in" element={<SignInForm />} />
+            <Route path="/sign-up" element={<SignUpForm />} />
+          </Route>
+        </PublicRoute>
 
         {/* Private Routes */}
-        <Route element={<RootLayout />}>
-          <Route index element={<Home />} />
-        </Route>
+        <PrivateRoute>
+          <Route element={<RootLayout />}>
+            <Route index element={<Home />} />
+          </Route>
+        </PrivateRoute>
       </Routes>
     </main>
   );

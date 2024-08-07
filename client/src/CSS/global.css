@@ -48,3 +48,11 @@
     background-color: #8a6029;
     transition: 0.3s;
 }
+
+.error {
+    color: #8a6029;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: Montserrat;
+    text-align: center;
+}
