@@ -54,7 +54,7 @@ const SignUpFrom: React.FC = () => {
       {serverError && (<span className="error">{serverError}</span>)}
 
       {/* Submit button */}
-      <Button type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>
+      <Button onClick={null} type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>
 
       {/* If the user already has an account */}
       <p style={{ color: '#EEEEEE', fontFamily: 'Montserrat' }}>Already have an account? <Link style={{ textDecoration: 'none' }} to="/sign-in">Sign In</Link></p>

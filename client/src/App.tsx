@@ -20,19 +20,19 @@ const App = () => {
     >
       <Routes>
         {/* Public Routes */}
-        <PublicRoute>
+        <Route element={<PublicRoute />}>
           <Route element={<AuthLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
             <Route path="/sign-up" element={<SignUpForm />} />
           </Route>
-        </PublicRoute>
+        </Route>
 
         {/* Private Routes */}
-        <PrivateRoute>
+        <Route element={<PrivateRoute />}>
           <Route element={<RootLayout />}>
             <Route index element={<Home />} />
           </Route>
-        </PrivateRoute>
+        </Route>
       </Routes>
     </main>
   );

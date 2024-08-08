@@ -1,5 +1,5 @@
 // Importing all the necessary libraries
-import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import {
   createContext,
@@ -38,6 +38,7 @@ interface AuthContextType {
   ) => Promise<void>;
   logout: () => Promise<void>;
   serverError: string | null;
+  fatalError: string | null;
 }
 
 // Interface for api response
@@ -116,31 +117,21 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [fatalError, setFatalError] = useState<string | null>(null);
 
-  // We will get user data in case the user is already signed in
-  const {
-    data,
-    isError,
-    isLoading: userQueryLoading,
-    error,
-  } = useQuery({ queryKey: ["user"], queryFn: api.getCurrentUser });
-
-  // useEffect for error handling and setting hooks
+  // This is a use effect for fetching the user data
   useEffect(() => {
-    if (isError) {
-      setServerError(error.message);
-    } else if (data) {
-      setUser(data.data.user);
-    } else {
-      setUser(null);
+    async function getUserData() {
+      setIsLoading(true);
+      if (!user) {
+        const data = await api.getCurrentUser();
+        if (data) setUser(data.data.user);
+      }
+      setIsLoading(false);
     }
-  }, [data, isError, error]);
 
-  // Side effect for hanlding loading while user checking
-  useEffect(() => {
-    if (userQueryLoading) setIsLoading(true);
-    else setIsLoading(false);
-  }, [userQueryLoading]);
+    getUserData();
+  }, []);
 
   // Function for register mutation
   const registerMutation = useMutation({
@@ -175,9 +166,9 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     },
     // if any errors occur
     onError: (error: any) => {
-      setServerError(
-        error.response?.data?.error || "An unexpected error occurred"
-      );
+      if (error.response?.data?.error)
+        setServerError(error.response?.data?.error);
+      else setFatalError("An unexpected error occured");
     },
   });
 
@@ -195,15 +186,12 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
       // Set user state to contain the user details
       setUser(data.data.user);
-
-      // Navigate to home
-      navigate("/");
     },
     // If any errors occur
     onError: (error: any) => {
-      setServerError(
-        error.response?.data?.error || "An unexpected error occurred"
-      );
+      if (error.response?.data?.error)
+        setServerError(error.response?.data?.error);
+      else setFatalError("An unexpected error occurred");
     },
   });
 
@@ -221,13 +209,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
       // Set user state to null
       setUser(null);
-
-      // Navigate to sign in route
-      navigate("/sign-in");
     },
     // If any errors occur
     onError: () => {
-      setServerError("Failed to logout. Try again later.");
+      setFatalError("Failed to logout. Try again later.");
     },
   });
 
@@ -239,44 +224,37 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     password: string,
     confirmPassword: string
   ) => {
-    setIsLoading(true);
-    try {
-      await registerMutation.mutateAsync({
-        name,
-        username,
-        email,
-        password,
-        confirmPassword,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await registerMutation.mutateAsync({
+      name,
+      username,
+      email,
+      password,
+      confirmPassword,
+    });
   };
 
   // Actual logic for login
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      await loginMutation.mutateAsync({ email, password });
-    } finally {
-      setIsLoading(false);
-    }
+    await loginMutation.mutateAsync({ email, password });
   };
 
   // Actual logic for logout
   const logout = async () => {
-    setIsLoading(true);
-    try {
-      await logoutMutation.mutateAsync();
-    } finally {
-      setIsLoading(false);
-    }
+    await logoutMutation.mutateAsync();
   };
 
   // Return the context
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, login, register, logout, serverError }}
+      value={{
+        user,
+        isLoading,
+        login,
+        register,
+        logout,
+        serverError,
+        fatalError,
+      }}
     >
       {children}
     </AuthContext.Provider>

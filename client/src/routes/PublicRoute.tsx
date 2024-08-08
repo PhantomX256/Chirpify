@@ -1,17 +1,17 @@
 import React from "react";
 import { useAuth } from "../lib/context/AuthContext";
 import { TailSpin } from "react-loader-spinner";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, Outlet } from "react-router-dom";
 
-const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PublicRoute: React.FC = () => {
   // Getting all context variables
-  const { user, isLoading, serverError } = useAuth();
+  const { user, isLoading, fatalError } = useAuth();
   const location = useLocation();
 
   // If the data is loading
   if (isLoading) {
     return (
-      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <TailSpin width="100px" height="100px" />
       </div>
     );
@@ -19,20 +19,20 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   // User is authenticated
   if (user) {
-    <Navigate to='/' state={{ from: location }} replace />
+    return <Navigate to='/' state={{ from: location }} replace />
   }
 
   // If any error occurs during data fetching
-  if (serverError) {
+  if (fatalError) {
     return (
-      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <span className="error">{serverError}</span>
+      <div style={{ height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <span className="error">{fatalError}</span>
       </div>
     );
   }
 
   // User is not authenticated
-  return <>{children}</>;
+  return <Outlet />;
 };
 
 export default PublicRoute;

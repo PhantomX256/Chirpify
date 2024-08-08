@@ -25,9 +25,6 @@ app.use(cookieParser());
 // Setting up check api key middleware for api routes
 app.use('/api', checkApiKey);
 
-// Using authMiddleware to verify jwt tokens
-app.use("/api/auth/logout", authMiddleware);
-
 // Routes
 app.use("/api/auth", authRoutes);
 
