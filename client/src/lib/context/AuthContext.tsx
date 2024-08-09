@@ -1,5 +1,5 @@
 // Importing all the necessary libraries
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
   createContext,
@@ -115,23 +115,43 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   // Hooks for user and loading
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [serverError, setServerError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
 
   // This is a use effect for fetching the user data
-  useEffect(() => {
-    async function getUserData() {
-      setIsLoading(true);
-      if (!user) {
-        const data = await api.getCurrentUser();
-        if (data) setUser(data.data.user);
-      }
-      setIsLoading(false);
-    }
+  // useEffect(() => {
+  //   async function getUserData() {
+  //     setIsLoading(true);
+  //     if (!user) {
+  //       const data = await api.getCurrentUser();
+  //       if (data) setUser(data.data.user);
+  //     }
+  //     setIsLoading(false);
+  //   }
 
-    getUserData();
-  }, []);
+  //   getUserData();
+  // }, []);
+
+  // Function for fetching the user and checking if the user is authenticated
+  const { data: fetchedUser, isLoading: isUserFetching } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      try {
+        const response = await api.getCurrentUser();
+        return response.data.user;
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        return null;
+      }
+    },
+  });
+
+  // use effect for when the user is fetched
+  useEffect(() => {
+    setUser(fetchedUser !== undefined ? fetchedUser : null);
+    setIsLoading(isUserFetching);
+  }, [fetchedUser, isUserFetching]);
 
   // Function for register mutation
   const registerMutation = useMutation({
