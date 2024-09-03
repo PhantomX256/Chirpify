@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { TailSpin } from "react-loader-spinner";
 import { Input } from "../../components";
 import { Button } from '../../components';
+import { useAuth } from "../../lib/context/AuthContext";
 
 const SignInForm = () => {
   // Declaring form hooks
@@ -13,32 +14,41 @@ const SignInForm = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // function to handle submit
-  const handleSubmit = (e: FormEvent) => {
-    setLoading(true);
-    // prevent default credentials
-    e.preventDefault();
+  const { login, serverError } = useAuth();
 
-    setTimeout(() => {
+  // function to handle submit
+  const handleSubmit = async (e: FormEvent) => {
+    try {
+      // set loading to true
+      setLoading(true);
+
+      // prevent default credentials
+      e.preventDefault();
+
+      // call login
+      await login(email, password);
+    } finally {
       setLoading(false);
-      alert('Success');
-    }, 2000);
+    }
   }
   
   return (
-    <form style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '350px' }} onSubmit={handleSubmit}>
+    <form className="auth-form-container" onSubmit={handleSubmit}>
       {/* Heading */}
-      <h2 style={{ textAlign: 'center', color: '#EEEEEE', fontFamily: 'Work Sans', fontSize: '30px' }}>Log In</h2>
+      <h2 style={{ textAlign: 'center', color: '#EEEEEE', fontFamily: 'Work Sans', fontSize: '1.7rem' }}>Log In</h2>
 
       {/* Input Fields */}
       <Input label="Email" type="email" value={email} name="email" setState={setEmail} placeholder="" />
       <Input label="Password" type="password" value={password} name="email" setState={setPassword} placeholder="" />
 
+      {/* Error field */}
+      { serverError && <span className="error">{serverError}</span> }
+
       {/* Submit Button */}
-      <Button type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>
+      <Button className="btn" type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>
 
       {/* If the user already has an account */}
-      <p style={{ color: '#EEEEEE', fontFamily: 'Montserrat' }}>Don't have an account? <Link style={{ textDecoration: 'none' }} to="/sign-up">Sign Up</Link></p>
+      <p className="auth-redirect">Don't have an account? <Link style={{ textDecoration: 'none' }} to="/sign-up">Sign Up</Link></p>
 
     </form>
   );

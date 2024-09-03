@@ -1,50 +1,296 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* This is the styles for auth layout */
+
+.auth-image-background {
+  height: 99.5vh;
+  width: 50vw;
+  object-fit: cover;
+  background-repeat: no-repeat;
+}
+
+.auth-image-container {
+  position: relative;
+  height: 100vh;
+  width: 50vw;
+}
+
+.auth-name-logo {
+  width: 250px;
+  margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+  .auth-image-background {
+    display: none;
+  }
+
+  .auth-image-container {
+    display: none;
+  }
+
+  .auth-name-logo {
+    width: 200px;
+  }
+}
+
+/* Input form container */
+.auth-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 350px;
+}
+
+.auth-redirect {
+  color: #eeeeee;
+  font-family: "Montserrat";
+  font-size: 16px;
 }
 
 /* This is the styles for Input component */
 .input-field-label {
-    color: #EEEEEE;
-    font-family: 'Russo One';
-    font-size: 18px;
+  color: #eeeeee;
+  font-family: "Russo One";
+  font-size: 18px;
 }
 
 .input-field-container {
-    margin-top: 5px;
-    background-color: #31363F;
-    padding: 10px 15px;
-    border-radius: 5px;
+  margin-top: 5px;
+  background-color: #31363f;
+  padding: 10px 15px;
+  border-radius: 5px;
 }
 
 .input-field {
-    font-family: "Montserrat";
-    background-color: transparent;
-    border: none;
-    color: #EEEEEE;
-    outline: none;
-    font-size: 18px;
-    width: 100%;
+  font-family: "Montserrat";
+  background-color: transparent;
+  border: none;
+  color: #eeeeee;
+  outline: none;
+  font-size: 18px;
+  width: 100%;
+  font-weight: 300;
+}
+
+.input-field::placeholder {
+  color: #76abae;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .auth-form-container {
+    width: 250px;
+  }
+
+  .auth-redirect {
+    font-size: 15px;
+  }
 }
 
 /* This is the Button component */
+.default-button {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 5px;
+}
+
 .btn {
-    color: #222831;
-    font-family: 'Russo One';
-    border-radius: 5px;
-    background-color: #76ABAE;
-    border: none;
-    font-size: 18px;
-    padding: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    justify-content: center;
+  color: #222831;
+  font-family: "Russo One";
+  background-color: #76abae;
+  font-size: 18px;
+  transition: 0.3s;
 }
 
 .btn:hover {
-    color: #EEEEEE  ;
-    background-color: #8a6029;
-    transition: 0.3s;
+  color: #eeeeee;
+  background-color: #8a6029;
+  transition: 0.3s;
+}
+
+.error {
+  color: #8a6029;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: Montserrat;
+  text-align: center;
+}
+
+/* This is the CSS for TopBar */
+.top-bar-container {
+  display: none;
+  background-color: #31363f;
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 830px) {
+  .top-bar-container {
+    display: flex;
+  }
+}
+
+/* This is CSS for root layout */
+.root-main-content {
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #222831;
+}
+
+/* This is the CSS for left sidebar component */
+.left-sidebar-container {
+  display: flex;
+  background-color: #31363f;
+  flex: 1;
+  min-height: 100vh;
+  padding: 20px;
+  max-width: 350px;
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: 70px;
+}
+
+.left-sidebar-navlink-ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.left-sidebar-navlink-li {
+  padding-left: 0px;
+}
+
+.left-sidebar-navlink {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: "Montserrat";
+  color: #76abae;
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 15px;
+  padding-left: 20px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.left-sidebar-navlink:hover {
+  color: #eeeeee;
+  transition: 0.3s;
+  background-color: rgba(118, 171, 174, 0.5);
+}
+
+.logout-button {
+  background-color: transparent;
+  margin-top: auto;
+  color: #76abae;
+  transition: 0.3s;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  font-family: "Montserrat";
+}
+
+.logout-button:hover {
+  color: #eeeeee;
+  transition: 0.3s;
+  background-color: rgba(118, 171, 174, 0.5);
+}
+
+
+@media (max-width: 830px) {
+  .left-sidebar-container {
+    display: none;
+  }
+  .root-main-content {
+    min-height: calc(100vh - 60px);
+  }
+}
+
+/* This is the css for bottom bar component */
+.bottom-bar-container {
+  position: fixed;
+  bottom: 0px;
+  background-color: #31363f;
+  width: 100vw;
+  display: none;
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+}
+
+.bottom-bar-navlink-ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.bottom-bar-navlink {
+  font-weight: 600;
+  font-size: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #76abae;
+  gap: 5px;
+  text-decoration: none;
+  font-family: "Montserrat";
+}
+
+.selected {
+  background-color: #8a6029;
+  border-radius: 3px;
+  color: #eeeeee;
+  transition: 0.3s;
+}
+
+.selected:hover {
+  background-color: #8a6029;
+}
+
+@media (max-width: 830px) {
+  .bottom-bar-container {
+    display: block;
+  }
+}
+
+/* This is the styles for Text Area */
+.text-area-container {
+  background-color: #31363f;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.text-area {
+  font-family: "Montserrat";
+  color: #eeeeee;
+  font-size: 18px;
+  background-color: transparent;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  height: 100px;
+  outline: none;
+  font-weight: 300;
+}
+
+.text-area::placeholder {
+  color: #76abae;
+  font-size: 18px;
 }
