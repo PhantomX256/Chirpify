@@ -294,3 +294,30 @@
   color: #76abae;
   font-size: 18px;
 }
+
+/* This is the styles for the Post Form */
+.post-submit-button {
+  background-color: #8a6029;
+  color: #eeeeee;
+  font-family: "Montserrat";
+  width: 100px;
+  font-weight: 600;
+  transition: 0.3s;
+  font-size: 15px;;
+}
+
+.post-cancel-button {
+  background-color: #76abae;
+  color: #31363f;
+  font-weight: 600;
+  font-family: "Montserrat";
+  width: 100px;
+  transition: 0.3s;
+  font-size: 15px;;
+}
+
+.post-cancel-button:hover {
+  background-color: #8a6029;
+  color: #eeeeee;
+  transition: 0.3s;
+}
