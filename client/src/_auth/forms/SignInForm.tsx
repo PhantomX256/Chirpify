@@ -33,9 +33,9 @@ const SignInForm = () => {
   }
   
   return (
-    <form style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '350px' }} onSubmit={handleSubmit}>
+    <form className="auth-form-container" onSubmit={handleSubmit}>
       {/* Heading */}
-      <h2 style={{ textAlign: 'center', color: '#EEEEEE', fontFamily: 'Work Sans', fontSize: '30px' }}>Log In</h2>
+      <h2 style={{ textAlign: 'center', color: '#EEEEEE', fontFamily: 'Work Sans', fontSize: '1.7rem' }}>Log In</h2>
 
       {/* Input Fields */}
       <Input label="Email" type="email" value={email} name="email" setState={setEmail} placeholder="" />
@@ -45,10 +45,10 @@ const SignInForm = () => {
       { serverError && <span className="error">{serverError}</span> }
 
       {/* Submit Button */}
-      <Button onClick={null} type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>
+      <Button className="btn" type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>
 
       {/* If the user already has an account */}
-      <p style={{ color: '#EEEEEE', fontFamily: 'Montserrat' }}>Don't have an account? <Link style={{ textDecoration: 'none' }} to="/sign-up">Sign Up</Link></p>
+      <p className="auth-redirect">Don't have an account? <Link style={{ textDecoration: 'none' }} to="/sign-up">Sign Up</Link></p>
 
     </form>
   );

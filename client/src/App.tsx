@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router-dom";
 
 // Importing necessary components
 import { SignInForm, SignUpForm } from "./_auth/forms";
-import { Home } from "./_root/pages";
+import { Home, CreatePost } from "./_root/pages";
 import RootLayout from "./_root/RootLayout";
 import AuthLayout from "./_auth/AuthLayout";
 
@@ -15,9 +15,7 @@ import { PublicRoute, PrivateRoute } from "./routes";
 
 const App = () => {
   return (
-    <main
-      style={{ display: "flex", height: "100vh", backgroundColor: "#222831" }}
-    >
+    <main>
       <Routes>
         {/* Public Routes */}
         <Route element={<PublicRoute />}>
@@ -31,6 +29,11 @@ const App = () => {
         <Route element={<PrivateRoute />}>
           <Route element={<RootLayout />}>
             <Route index element={<Home />} />
+            <Route path="/explore" />
+            <Route path="/people" />
+            <Route path="/saved" />
+            <Route path="/profile/:id" />
+            <Route path="/create-post" element={<CreatePost />} />
           </Route>
         </Route>
       </Routes>

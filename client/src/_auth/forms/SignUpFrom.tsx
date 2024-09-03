@@ -39,9 +39,9 @@ const SignUpFrom: React.FC = () => {
   }
 
   return (
-    <form style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '350px' }} onSubmit={handleSubmit}>
+    <form className="auth-form-container" onSubmit={handleSubmit}>
       {/* Heading */}
-      <h2 style={{ textAlign: 'center', color: '#EEEEEE', fontFamily: 'Work Sans', fontSize: '30px' }}>Create an Account</h2>
+      <h2 style={{ textAlign: 'center', color: '#EEEEEE', fontFamily: 'Work Sans', fontSize: '25px' }}>Create an Account</h2>
 
       {/* Input Fields */}
       <Input label="Name" type="text" value={name} name="name" setState={setName} placeholder="" />
@@ -54,10 +54,10 @@ const SignUpFrom: React.FC = () => {
       {serverError && (<span className="error">{serverError}</span>)}
 
       {/* Submit button */}
-      <Button onClick={null} type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>
+      <Button className="btn" type="submit">{loading ? <TailSpin width='20px' height='20px' /> : 'Submit'}</Button>
 
       {/* If the user already has an account */}
-      <p style={{ color: '#EEEEEE', fontFamily: 'Montserrat' }}>Already have an account? <Link style={{ textDecoration: 'none' }} to="/sign-in">Sign In</Link></p>
+      <p className="auth-redirect">Already have an account? <Link style={{ textDecoration: 'none' }} to="/sign-in">Sign In</Link></p>
     </form>
   );
 };

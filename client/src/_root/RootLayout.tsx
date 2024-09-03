@@ -1,20 +1,21 @@
 // This component is for generalizing the layout of the main website pages
 
-import { Button } from "../components";
-import { useAuth } from "../lib/context/AuthContext";
+import { Outlet } from "react-router-dom";
+import { LeftSidebar, TopBar, BottomBar } from "../components";
 
 const RootLayout = () => {
-  const { logout } = useAuth();
-
-  const handleClick = async () => {
-    await logout();
-  }
-
-  return <div>
-    <Button type="button" onClick={handleClick}>
-      Logout
-    </Button>
-  </div>;
+  return (
+    <div style={{ minHeight: "100vh" }}>
+      <TopBar />
+      <div className="root-main-content">
+        <LeftSidebar />
+        <section style={{ flex: "2" }}>
+          <Outlet />
+        </section>
+      </div>
+      <BottomBar />
+    </div>
+  );
 };
 
 export default RootLayout;

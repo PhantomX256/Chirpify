@@ -23,5 +23,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": [
+    "src/**/*.tsx", // Include all .tsx files within the 'src' directory and its subdirectories
+    "src/**/*.ts",
+    "public/assets/icons/*.tsx" // Specifically include .tsx files in the 'icons' directory
+  ]
 }
