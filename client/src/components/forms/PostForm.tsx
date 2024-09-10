@@ -5,7 +5,6 @@ import TextArea from '../shared/TextArea';
 import FileUploader from '../shared/FileUploader';
 import Button from '../shared/Button';
 import { useCreatePost } from '../../lib/react-query/queriesAndMutations';
-import { useNavigate } from 'react-router-dom';
 
 const PostForm = () => {
   const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();

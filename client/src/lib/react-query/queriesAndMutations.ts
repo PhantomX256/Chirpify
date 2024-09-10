@@ -20,6 +20,7 @@ export const useCreatePost = () => {
 
   const createPost = async (postData: PostData) => {
     const filePostData = new FormData();
+    if (!postData.file) throw new Error("File is required");
     filePostData.append("meme", postData.file);
 
     const imageResponse = await axios.post(
@@ -50,7 +51,7 @@ export const useCreatePost = () => {
         withCredentials: true,
       }
     );
-  
+
     return postResponse.data;
   };
 
@@ -58,12 +59,15 @@ export const useCreatePost = () => {
     mutationFn: createPost,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      navigate('/');
+      navigate("/");
     },
-    onError: () => {
-      setToast(
-        "An error occured while creating a post. Please try again later."
-      );
+    onError: (error) => {
+      setToast([
+        "Error",
+        error.message
+          ? error.message
+          : "An error occured while creating a post. Please try again later.",
+      ]);
     },
   });
 };

@@ -40,7 +40,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   serverError: string | null;
   fatalError: string | null;
-  setToast: React.Dispatch<React.SetStateAction<string | null>>;
+  setToast: React.Dispatch<React.SetStateAction<string[] | null>>;
 }
 
 // Interface for api response
@@ -120,7 +120,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [serverError, setServerError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<string[] | null>(null);
 
   const { data: fetchedUser, isLoading: isUserFetching } = useQuery({
     queryKey: ["user"],
