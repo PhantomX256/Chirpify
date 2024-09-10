@@ -11,6 +11,7 @@ import {
 } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import Toast from '../../components/shared/Toast';
 
 //  ###########
 //  NOTE: Somehow this piece of code works. DO NOT MESS WITH IT!!!!!!! EVER....
@@ -39,6 +40,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   serverError: string | null;
   fatalError: string | null;
+  setToast: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 // Interface for api response
@@ -118,22 +120,8 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [serverError, setServerError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
-  // This is a use effect for fetching the user data
-  // useEffect(() => {
-  //   async function getUserData() {
-  //     setIsLoading(true);
-  //     if (!user) {
-  //       const data = await api.getCurrentUser();
-  //       if (data) setUser(data.data.user);
-  //     }
-  //     setIsLoading(false);
-  //   }
-
-  //   getUserData();
-  // }, []);
-
-  // Function for fetching the user and checking if the user is authenticated
   const { data: fetchedUser, isLoading: isUserFetching } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
@@ -274,8 +262,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         logout,
         serverError,
         fatalError,
+        setToast
       }}
     >
+      <Toast error={toast} setError={setToast} />
       {children}
     </AuthContext.Provider>
   );
