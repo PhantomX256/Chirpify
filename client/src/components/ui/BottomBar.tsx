@@ -12,7 +12,7 @@ const BottomBar = () => {
           const isActive = link.route === pathname;
 
           return (
-            <li>
+            <li key={link.label}>
               <NavLink className={`bottom-bar-navlink ${isActive && 'selected'}`} to={link.route}>
                 <SvgIcon
                   path={link.path}

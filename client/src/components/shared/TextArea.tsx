@@ -14,7 +14,7 @@ const TextArea: React.FC<TextAreaProps> = ({ label, placeholder, value, setState
     <span>
       <span className="input-field-label">{label}</span>
       <div className="text-area-container">
-        <textarea onChange={handleChange} className="text-area" placeholder={placeholder}>{value}</textarea>
+        <textarea onChange={handleChange} className="text-area" placeholder={placeholder} value={value} />
       </div>
     </span>
   );

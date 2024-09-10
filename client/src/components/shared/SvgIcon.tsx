@@ -10,7 +10,6 @@ interface SvgIconProps {
 const SvgIcon: React.FC<SvgIconProps> = ({ path, width, height, viewbox }) => {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"
       viewBox={viewbox}
       width={width}
