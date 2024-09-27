@@ -96,6 +96,8 @@ export const useGetPostById = (id: string) => {
   return useQuery({
     queryKey: ["post", id],
     queryFn: () => getPostById(id),
+    enabled: !!id,
+    retry: 0,
   });
 };
 
