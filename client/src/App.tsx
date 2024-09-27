@@ -12,6 +12,7 @@ import AuthLayout from "./_auth/AuthLayout";
 
 // Importing public and private routes
 import { PublicRoute, PrivateRoute } from "./routes";
+import EditPost from "./_root/pages/EditPost";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
             <Route path="/saved" />
             <Route path="/profile/:id" />
             <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/posts/edit/:id" element={<EditPost />} />
           </Route>
         </Route>
       </Routes>

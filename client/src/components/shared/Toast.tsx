@@ -7,9 +7,15 @@ const Toast: React.FC<ToastProps> = ({ error, setError }) => {
   const heading = error && error[0];
   const body = error && error[1];
 
+  setInterval(() => {
+    setError(null);
+  }, 5000);
+
   return (
     <div
-      className={`toast ${heading ? "slide-bottom" : ""} ${!heading ? "slide-top" : ""}`}
+      className={`toast ${heading ? "slide-bottom" : ""} ${
+        !heading ? "slide-top" : ""
+      }`}
     >
       <img
         onClick={() => {
@@ -20,9 +26,7 @@ const Toast: React.FC<ToastProps> = ({ error, setError }) => {
         className="toast-cross"
         src="../../../public/assets/icons/cross.svg"
       />
-      <h2 className="toast-heading">
-        {heading}
-      </h2>
+      <h2 className="toast-heading">{heading}</h2>
       <p className="toast-error">{body}</p>
     </div>
   );

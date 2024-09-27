@@ -5,11 +5,11 @@ export const uploadFile = async (req, res) => {
   try {
     const date = new Date();
 
-    const imagePath = req.file.path;
+    const imageName = req.file.filename;
 
     const imageResponse = await pool.query(
       "INSERT INTO images (url) VALUES ($1) RETURNING *",
-      [imagePath]
+      [imageName]
     );
 
     console.log(
