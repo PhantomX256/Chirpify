@@ -7,15 +7,18 @@ interface FileUploaderProps {
   label: string;
   value: FileWithPath | null;
   setState: React.Dispatch<React.SetStateAction<FileWithPath | null>>;
+  url?: string | null;
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
   label,
   value,
   setState,
+  url
 }) => {
   // state for temp URL
-  const [fileUrl, setFileUrl] = useState("");
+  // if there is already a url associated then use that
+  const [fileUrl, setFileUrl] = useState(url ? `http://localhost:5000/public/${url}` : "");
 
   // Whenever a file is selected or dropped this function is called to change the value or set
   // State to selected file and create a temp url to display the file
@@ -41,7 +44,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       <span className="input-field-label">{label}</span>
       <div className="file-upload-container" {...getRootProps()}>
         <input {...getInputProps()} name="meme" />
-        {value ? (
+        {fileUrl || value ? (
           // A file is selected so display the file
           <span
             style={{

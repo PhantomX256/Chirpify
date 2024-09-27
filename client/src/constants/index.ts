@@ -87,3 +87,10 @@ export const bottombarLinks: Link[] = [
     viewbox: "0 0 24 24",
   },
 ];
+
+export const apiHeaders = {
+  headers: {
+    "x-api-key": import.meta.env.VITE_API_KEY,
+  },
+  withCredentials: true,
+};

@@ -133,6 +133,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         return null;
       }
     },
+    refetchOnWindowFocus: false,
   });
 
   // use effect for when the user is fetched
@@ -214,6 +215,9 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
       // Set query data user to null
       queryClient.setQueryData(["user"], null); // <-- Corrected here
+
+      // Invalidate all queries
+      queryClient.clear();
 
       // Set user state to null
       setUser(null);
