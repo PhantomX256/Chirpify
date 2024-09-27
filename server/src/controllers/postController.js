@@ -170,10 +170,27 @@ export const getPost = async (req, res) => {
   try {
     const postId = req.body.postId;
 
+    if (!postId || typeof postId !== "string" || !/^[0-9]+$/.test(postId)) {
+      console.log("Invalid post id was sent");
+      return res.status(400).json({ error: "Invalid post ID" });
+    }
+
     const getPostResponse = await pool.query(
-      "SELECT p.*, i.url FROM posts p JOIN posts_photo_relation ppr ON p.id=ppr.post_id JOIN images i ON ppr.image_id=i.id WHERE p.id=$1",
-      [postId]
+      "SELECT p.id, p.creator_id, p.title, p.caption, p.tags, p.created_at, " +
+      "i.url, u.username, " +
+      "(SELECT COUNT(*) FROM likes l WHERE l.post_id = p.id) AS like_count, " +
+      "CASE WHEN EXISTS (SELECT 1 FROM likes l WHERE l.post_id = p.id AND l.user_id = $1) THEN TRUE ELSE FALSE END AS is_liked, " +
+      "CASE WHEN EXISTS (SELECT 1 FROM saves s WHERE s.post_id = p.id AND s.user_id = $1) THEN TRUE ELSE FALSE END AS is_saved " +
+      "FROM posts p " +
+      "JOIN users u ON p.creator_id = u.id " +
+      "JOIN posts_photo_relation ppr ON p.id = ppr.post_id " +
+      "JOIN images i ON ppr.image_id = i.id " +
+      "WHERE p.id = $2",
+      [req.userId, postId]
     );
+
+    if (!getPostResponse.rows[0])
+      return res.status(404).json({ error: "Post not found" });
 
     console.log(
       `User: ${

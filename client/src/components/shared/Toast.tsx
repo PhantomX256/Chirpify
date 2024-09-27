@@ -7,10 +7,6 @@ const Toast: React.FC<ToastProps> = ({ error, setError }) => {
   const heading = error && error[0];
   const body = error && error[1];
 
-  setInterval(() => {
-    setError(null);
-  }, 5000);
-
   return (
     <div
       className={`toast ${heading ? "slide-bottom" : ""} ${
