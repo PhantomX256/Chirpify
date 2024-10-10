@@ -258,3 +258,35 @@ export const editPost = async (req, res) => {
     res.status(500).json({ error: "An error occurred while editing post" });
   }
 };
+
+// get saved posts
+export const getSavedPosts = async (req, res) => {
+  const date = new Date();
+
+  try {
+    const getSavedPostsQuery = await pool.query(
+      "SELECT p.*, i.url, u.username, " +
+      "(SELECT COUNT(*) FROM likes l WHERE l.post_id = p.id) AS like_count, " +
+      "CASE WHEN EXISTS (SELECT 1 FROM likes l WHERE l.post_id = p.id AND l.user_id = $1) THEN TRUE ELSE FALSE END AS is_liked, " +
+      "TRUE AS is_saved " +
+      "FROM saves s " +
+      "JOIN posts p ON s.post_id = p.id " +
+      "JOIN users u ON p.creator_id = u.id " +
+      "JOIN posts_photo_relation ppr ON p.id = ppr.post_id " +
+      "JOIN images i ON ppr.image_id = i.id " +
+      "WHERE s.user_id = $1",
+      [req.userId]
+    );
+
+    console.log(
+      `User: ${
+        req.userId
+      } requested saved Posts  (getSavedPost)  (${date.getHours()}:${date.getMinutes()})`
+    );
+
+    return res.status(200).json(getSavedPostsQuery.rows);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred while fetching saved posts" })
+  }
+}

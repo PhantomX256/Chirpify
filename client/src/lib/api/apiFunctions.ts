@@ -151,3 +151,17 @@ export const editPost = async (postData: PostDataType) => {
     throw new Error("An Error Occurred Editing Post");
   }
 };
+
+export const getSavedPosts = async () => {
+  try {
+    const savedPostsResponse = await axios.post(
+      "http://localhost:5000/api/app/posts/saved",
+      null,
+      apiHeaders
+    );
+
+    return savedPostsResponse.data;
+  } catch (err) {
+    throw new Error("An error occurred while fetching saved posts");
+  }
+};

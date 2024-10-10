@@ -14,6 +14,7 @@ import AuthLayout from "./_auth/AuthLayout";
 import { PublicRoute, PrivateRoute } from "./routes";
 import EditPost from "./_root/pages/EditPost";
 import PostDetails from "./_root/pages/PostDetails";
+import SavedPosts from "./_root/pages/SavedPosts";
 
 const App = () => {
   return (
@@ -33,7 +34,7 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="/explore" />
             <Route path="/people" />
-            <Route path="/saved" />
+            <Route path="/saved" element={<SavedPosts />} />
             <Route path="/profile/:id" />
             <Route path="/posts/:id" element={<PostDetails />} />
             <Route path="/create-post" element={<CreatePost />} />

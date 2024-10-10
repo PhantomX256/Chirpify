@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createPost, editPost, getPost, likePost, recentPosts, savePost, unlikePost, unsavePost } from "../controllers/postController.js";
+import { createPost, editPost, getPost, getSavedPosts, likePost, recentPosts, savePost, unlikePost, unsavePost } from "../controllers/postController.js";
 
 const router = Router();
 
@@ -25,5 +25,7 @@ router.post("/unsave", unsavePost);
 router.post("/get", getPost);
 
 router.post("/edit", editPost);
+
+router.post("/saved", getSavedPosts);
 
 export default router;
