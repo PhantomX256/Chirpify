@@ -5,6 +5,7 @@ import {
   createPost,
   editPost,
   getPostById,
+  getSavedPosts,
   likePost,
   recentMemes,
   savePost,
@@ -88,6 +89,7 @@ export const useSavePost = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["recent-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["saved-posts"] });
     },
   });
 };
@@ -116,3 +118,10 @@ export const useEditPost = () => {
     },
   });
 };
+
+export const useGetSavedPost = () => {
+  return useQuery({
+    queryKey: ["saved-posts"],
+    queryFn: getSavedPosts,
+  });
+}
